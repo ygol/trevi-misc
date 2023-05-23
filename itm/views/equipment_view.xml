@@ -35,7 +35,7 @@
             <field name="context">
                 {
                     'search_default_virtual_parent_id': active_id,
-                    'search_default_equipment_type': 'virtual'
+                    'search_default_type_virtual': 1,
                 }
             </field>
         </record>
@@ -59,13 +59,24 @@
             <field name="name">itm.equipment.tree</field>
             <field name="model">itm.equipment</field>
             <field name="arch" type="xml">
-                <tree string="Assets">
+                <tree
+                    string="Assets"
+                    decoration-info="state == 'in_store'"
+                    decoration-warning="state == 'loaned'"
+                    decoration-danger="state == 'in_repair'"
+                    decoration-muted="state == 'retired'"
+                >
                     <field name="name" />
-                    <field name="partner_id" />
+                    <field name="code" />
                     <field name="description" />
-                    <field name="equipment_type" />
+                    <field name="ip4_ids" widget="many2many_tags" />
+                    <field name="site_id" />
+                    <field name="location" />
+                    <field name="owner" />
+                    <field name="partner_id" />
+                    <field name="asset_type_id" />
                     <field name="brand_id" />
-                    <field name="function_ids" />
+                    <field name="state" widget="badge" />
                 </tree>
             </field>
         </record>
@@ -75,6 +86,14 @@
             <field name="model">itm.equipment</field>
             <field name="arch" type="xml">
                 <form string="Assets">
+                    <header>
+                        <field
+                            name="state"
+                            widget="statusbar"
+                            clickable="1"
+                            statusbar_visible="in_store,in_use,loaned,in_repair,retired"
+                        />
+                    </header>
                     <sheet>
                         <div class="oe_button_box" name="buttons">
                             <button
@@ -154,25 +173,30 @@
                             </h2>
                         </div>
                         <group>
-                            <group string="Product Brand">
+                            <group>
+                                <field name="site_id" />
                                 <field name="brand" />
-                            </group>
-                            <group string="Operating System">
                                 <field name="os_name" />
                             </group>
-                            <group string="Information">
-                                <field name="site_id" />
+                            <group>
+                                <field name="code" />
+                                <field name="location" />
+                                <field name="owner" />
                             </group>
                         </group>
                         <notebook>
                             <page string="Configuration" groups="itm.group_itm_mod">
                                 <group>
                                     <group string="Equipment Type">
-                                        <field name="equipment_type" />
+                                        <field name="asset_type_id" />
                                     </group>
                                     <group string="Services">
                                         <field name="ad_service_id" />
                                         <field name="dhcp_service_id" />
+                                        <field
+                                            name="wireless_service_id"
+                                            attrs="{'invisible':[('function_wireless','=', False )]}"
+                                        />
                                     </group>
                                 </group>
                                 <group>
@@ -193,12 +217,13 @@
                                         <field name="function_router" />
                                         <field name="function_fileserver" />
                                         <field name="function_database" />
+                                        <field name="function_wireless" />
                                     </group>
                                 </group>
                             </page>
                             <page
                                 string="Virtual Machine Data"
-                                attrs="{'invisible':[('equipment_type','!=', 'virtual' )]}"
+                                attrs="{'invisible':[('asset_type_id','!=', %(itm.type_virtual)d)]}"
                             >
                                 <group>
                                     <group string="Host">
@@ -214,7 +239,7 @@
                             </page>
                             <page
                                 string="Product Data"
-                                attrs="{'invisible':[('equipment_type','!=', 'product' )]}"
+                                attrs="{'invisible':[('asset_type_id','!=', %(itm.type_bundle)d)]}"
                             >
                                 <group>
                                     <group>
@@ -299,6 +324,14 @@
                                             <field
                                                 name="static_ipv4_id"
                                                 attrs="{'invisible':[('use_dhcp4','=',True)]}"
+                                                context="{'default_network_id': network_id}"
+                                                domain="[('network_id', '=', network_id)]"
+                                            />
+                                            <field
+                                                name="dhcp_ipv4_id"
+                                                attrs="{'invisible':[('use_dhcp4','=',False)]}"
+                                                context="{'default_network_id': network_id}"
+                                                domain="[('network_id', '=', network_id)]"
                                             />
                                         </tree>
                                     </field>
@@ -402,9 +435,10 @@
                 <search string="Asset">
                     <!--Searchs-->
                     <field name="partner_id" string="Partner" />
-                    <field name="equipment_type" string="Type" />
+                    <field name="asset_type_id" string="Type" />
                     <field name="virtual_parent_id" string="Host" />
                     <field name="site_id" string="Site" />
+                    <field name="code" string="Code" />
                     <!--Filters-->
                     <filter
                         name="is_contracted"
@@ -437,26 +471,55 @@
                         help="Assets with applications"
                     />
                     <filter
-                        name="is_application"
+                        name="isnot_application"
                         string="Without Applications"
                         domain="[('is_application','=',0)]"
                         help="Assets without applications"
                     />
-                    <separator />
+                    <separator string="Asset Type" />
                     <filter
                         name="type_bundle"
-                        string="Bundle Type"
-                        domain="[('equipment_type','=','bundle')]"
+                        string="Physical Asset"
+                        domain="[('asset_type_id','child_of', %(itm.type_bundle)d)]"
+                        context="{
+                            'search_default_type_bundle': 1,
+                            'search_default_type_virtual': 0,
+                            'search_default_type_network': 0,
+                            'search_default_type_software': 0
+                        }"
                     />
                     <filter
                         name="type_virtual"
-                        string="Virtual Type"
-                        domain="[('equipment_type','=','virtual')]"
+                        string="Virtual Asset"
+                        domain="[('asset_type_id','child_of', %(itm.type_virtual)d)]"
+                        context="{
+                            'search_default_type_virtual': 1,
+                            'search_default_type_bundle': 0,
+                            'search_default_type_network': 0,
+                            'search_default_type_software': 0
+                        }"
                     />
                     <filter
-                        name="type_product"
-                        string="Product Type"
-                        domain="[('equipment_type','=','product')]"
+                        name="type_network"
+                        string="Network Asset"
+                        domain="[('asset_type_id','child_of', %(itm.type_network)d)]"
+                        context="{
+                            'search_default_type_network': 1,
+                            'search_default_type_virtual': 0,
+                            'search_default_type_bundle': 0,
+                            'search_default_type_software': 0
+                        }"
+                    />
+                    <filter
+                        name="type_software"
+                        string="Software Asset"
+                        domain="[('asset_type_id','child_of', %(itm.type_software)d)]"
+                        context="{
+                            'search_default_type_software': 1,
+                            'search_default_type_network': 0,
+                            'search_default_type_virtual': 0,
+                            'search_default_type_bundle': 0,
+                        }"
                     />
                     <separator string="Functions" />
                     <filter
@@ -467,23 +530,28 @@
                     />
                     <filter
                         name="function_fileserver"
-                        string="FileServers"
+                        string="File Server"
                         domain="[('function_fileserver','=',1)]"
                     />
                     <filter
                         name="function_host"
-                        string="Hosts"
+                        string="Host"
                         domain="[('function_host','=',1)]"
                     />
                     <filter
                         name="function_router"
-                        string="Routers"
+                        string="Router"
                         domain="[('function_router','=',1)]"
                     />
                     <filter
                         name="function_database"
-                        string="Database Servers"
+                        string="Database Server"
                         domain="[('function_database','=',1)]"
+                    />
+                    <filter
+                        name="function_wireless"
+                        string="Wireless Device"
+                        domain="[('function_wireless','=',1)]"
                     />
                    <separator />
                     <filter
@@ -506,7 +574,14 @@
                             string="Type"
                             icon="terp-personal"
                             domain="[]"
-                            context="{'group_by':'equipment_type'}"
+                            context="{'group_by':'asset_type_id'}"
+                        />
+                        <filter
+                            name="by_state"
+                            string="State"
+                            icon="terp-personal"
+                            domain="[]"
+                            context="{'group_by':'state'}"
                         />
                         <filter
                             name="by_parent"
@@ -521,6 +596,13 @@
                             icon="terp-personal"
                             domain="[]"
                             context="{'group_by':'contract_partner_id'}"
+                        />
+                        <filter
+                            name="by_location"
+                            string="Location"
+                            icon="terp-personal"
+                            domain="[]"
+                            context="{'group_by':'location'}"
                         />
                     </group>
                 </search>

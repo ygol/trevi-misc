@@ -17,7 +17,7 @@ IT Infrastructure Management
     :target: https://github.com/trevi-software/trevi-misc/tree/14.0/itm
     :alt: trevi-software/trevi-misc
 
-|badge1| |badge2| |badge3|
+|badge1| |badge2| |badge3| 
 
 This module is used to record information about a site's IT infrastructure. You can record information about equipment, software, backups, networks and access credentials.
 
@@ -34,6 +34,33 @@ Known issues / Roadmap
 
 Changelog
 =========
+
+14.0.3.3.6 (2022-07-05)
+~~~~~~~~~~~~~~~~~~~~~~~
+* [IMP] Allow multiple ip addresses with the same name if they are in different networks.
+
+14.0.2.3.6 (2022-07-05)
+~~~~~~~~~~~~~~~~~~~~~~~
+* [IMP] Add views for Asset Type under "Configuration" menu
+* [IMP] Track state of IT Assets
+
+14.0.2.2.6 (2022-07-05)
+~~~~~~~~~~~~~~~~~~~~~~~
+* [IMP] Remove field Equipment Type and replace with Asset Type which points to a new model "itm.equipment.type"
+* [IMP] Add new field "location" for storing location of assets
+* [IMP] Add new field "code" for organization specific coding of assets
+
+14.0.1.2.6 (2022-06-25)
+~~~~~~~~~~~~~~~~~~~~~~~
+* [IMP] Add Wireless Network info
+* [IMP] Add field for equipment owner
+
+14.0.1.1.6 (2022-04-08)
+~~~~~~~~~~~~~~~~~~~~~~~
+* [IMP] Enhancement of module's icon image
+* [IMP] Added help or a hover message
+* [IMP] Added brand to IT Asset page
+* [FIX] Asset image alignment to the right
 
 14.0.1.1.5 (2021-10-30)
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -77,7 +104,6 @@ Authors
 
 * TREVI Software
 * Leandro Ezequiel Baldi
-* Altela Eleviansyah Pramardhika
 
 Other credits
 ~~~~~~~~~~~~~

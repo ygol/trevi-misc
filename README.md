@@ -1,6 +1,9 @@
-[![Runbot Status](https://runbot.trevi.et/runbot/badge/flat//14.0.svg)](https://runbot.odoo-community.org/runbot/repo/github-com-oca-trevi-misc-)
-[![Build Status](https://travis-ci.com/mtelahun/trevi-misc.svg?branch=14.0)](https://travis-ci.com/mtelahun/trevi-misc)
-[![codecov](https://codecov.io/gh/mtelahun/trevi-misc/branch/14.0/graph/badge.svg)](https://codecov.io/gh/mtelahun/trevi-misc)
+
+<!-- /!\ Non OCA Context : Set here the badge of your runbot / runboat instance. -->
+[![Pre-commit Status](https://github.com/trevi-software/trevi-misc/actions/workflows/pre-commit.yml/badge.svg?branch=14.0)](https://github.com/trevi-software/trevi-misc/actions/workflows/pre-commit.yml?query=branch%3A14.0)
+[![Build Status](https://github.com/trevi-software/trevi-misc/actions/workflows/test.yml/badge.svg?branch=14.0)](https://github.com/trevi-software/trevi-misc/actions/workflows/test.yml?query=branch%3A14.0)
+[![codecov](https://codecov.io/gh/trevi-software/trevi-misc/branch/14.0/graph/badge.svg)](https://codecov.io/gh/trevi-software/trevi-misc)
+<!-- /!\ Non OCA Context : Set here the badge of your translation instance. -->
 
 <!-- /!\ do not modify above this line -->
 
@@ -16,13 +19,13 @@ Miscellaneous Odoo addons by Trevi that do not belong elsewhere.
 
 Available addons
 ----------------
-addon | version    | summary
---- |------------| ---
-[itm](itm/) | 14.0.1.1.6 | IT Assets, Credentials, Backups, Applications.
-[partner_contact_it](partner_contact_it/) | 14.0.1.0.0 | Designate a contact as an IT Contact of the parent company
-[project_portal_hide](project_portal_hide/) | 14.0.1.0.0 | Hide projects &amp; tasks in the customer portal.
-[purchase_portal_hide](purchase_portal_hide/) | 14.0.1.0.0 | Hide purchase orders in the customer portal.
-[sale_portal_hide](sale_portal_hide/) | 14.0.1.0.0 | Hide orders &amp; quotations in the customer portal.
+addon | version | maintainers | summary
+--- | --- | --- | ---
+[itm](itm/) | 14.0.3.3.6 |  | IT Assets, Credentials, Backups, Applications.
+[partner_contact_it](partner_contact_it/) | 14.0.1.0.0 |  | Designate a contact as an IT Contact of the parent company
+[project_portal_hide](project_portal_hide/) | 14.0.1.0.0 | [![TREVI Software](https://github.com/TREVI Software.png?size=30px)](https://github.com/TREVI Software) | Hide projects &amp; tasks in the customer portal.
+[purchase_portal_hide](purchase_portal_hide/) | 14.0.1.0.0 | [![TREVI Software](https://github.com/TREVI Software.png?size=30px)](https://github.com/TREVI Software) | Hide purchase orders in the customer portal.
+[sale_portal_hide](sale_portal_hide/) | 14.0.1.0.0 | [![TREVI Software](https://github.com/TREVI Software.png?size=30px)](https://github.com/TREVI Software) | Hide orders &amp; quotations in the customer portal.
 
 [//]: # (end addons)
 
@@ -32,12 +35,9 @@ addon | version    | summary
 
 This repository is licensed under [AGPL-3.0](LICENSE).
 
-However, each module can have a totally different license, as long as they adhere to OCA
+However, each module can have a totally different license, as long as they adhere to TREVI Software
 policy. Consult each module's `__manifest__.py` file, which contains a `license` key
 that explains its license.
 
 ----
-
-OCA, or the [Odoo Community Association](http://odoo-community.org/), is a nonprofit
-organization whose mission is to support the collaborative development of Odoo features
-and promote its widespread use.
+<!-- /!\ Non OCA Context : Set here the full description of your organization. -->
